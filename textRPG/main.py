@@ -123,7 +123,7 @@ def attack_main(monster, player_monster):
 
     if monster[2] <= 0:
         print("\n" + monster[0] + " has been defeated!")
-        print("\n You heal up your monsters and move on.")
+        print("\n You move on.")
         if monster[9] < 100:
             print("\n Score + 5")
             score += 5
