@@ -1,5 +1,6 @@
 import random
 
+score = 0
 
 # Functions:
 # player attacks
@@ -26,14 +27,15 @@ def roll_dice(min_num, max_num):
 
 # random monster name
 def random_name():
-    monster_names = ["Evilsaur", "Badrex", "Pterodevil", "Darksaur", "Shadowrex", "Gloomsaur", "Killrex"]
+    monster_names = ["Evilsaur", "Badrex", "Pterodevil", "Darksaur", "Shadowrex", "Gloomsaur", "Killrex", "Madroar",
+                     "Dangerex", "Aerosnaper", "Felinex"]
     roll = roll_dice(0, len(monster_names)-1)
     return monster_names[roll]
 
 
 # random monster type generator
 def random_type():
-    monster_types = ["Fire", "Water", "Wind", "Ground", "Evil", "Plant"]
+    monster_types = ["Fire", "Water", "Wind", "Ground", "Evil", "Plant", "Poison", "Bug"]
     roll = roll_dice(0, len(monster_types))
     return monster_types[roll-1]
 
@@ -56,23 +58,15 @@ def output_monsters(all_monsters):
 # Encounter
 def encounter():
     new_monster = random_monster()
-    print("A wild " + new_monster[0] + " (" + new_monster[1] + ") appears!\n")
+    print("\nA wild " + new_monster[0] + " (" + new_monster[1] + ") appears!\n")
 
     print("Which monster do you choose?")
     output_monsters(all_my_monsters)
 
     player_monster = monster_picker()
-    print(player_monster)
-    print(player_monster[0] + " go! ")
-    returned = attack_main(new_monster, player_monster)
-    print(returned)
-    '''if player_monster[2] <= 0:
-        print("\n" + player_monster[0] + " has fainted and can't fight anymore...")
-        player_monster[13] = True
-        if all_my_monsters[0][13] == True and all_my_monsters[1][13] == True and all_my_monsters[2][13] == True:
-            print("\nAll of your monsters have fainted. You lose.")
-            return True
-        player_monster = monster_picker()'''
+    print("\n" + player_monster[0] + " go! ")
+    attack_main(new_monster, player_monster)
+    print("\nYour current score: " + str(score))
 
 
 # pick monster
@@ -98,6 +92,7 @@ def monster_picker():
 
 # fight with current monster
 def attack_main(monster, player_monster):
+    global score
     print("\nYour turn!")
     print("\n" + player_monster[0] + "\'s health: " + str(player_monster[2]))
     print("Which move should " + player_monster[0] + " use?")
@@ -128,7 +123,19 @@ def attack_main(monster, player_monster):
 
     if monster[2] <= 0:
         print("\n" + monster[0] + " has been defeated!")
-        return player_monster
+        print("\n You heal up your monsters and move on.")
+        if monster[9] < 100:
+            print("\n Score + 5")
+            score += 5
+        elif monster[9] < 120:
+            print("\n Score + 10")
+            score += 10
+        elif monster[9] < 135:
+            print("\n Score + 15")
+            score += 15
+        else:
+            print("\n Score + 20")
+            score += 20
     else:
         # if monster not defeated he gets another turn
         print("\n" + monster[0] + "\'s turn...")
@@ -154,7 +161,13 @@ def attack_main(monster, player_monster):
         if player_monster[2] <= 0:
             print("\n" + player_monster[0] + " has been defeated...")
             player_monster[13] = True
-            return monster
+            print("\n Score - 10")
+            if score > 0:
+                if score-10 > 0:
+                    score -= 10
+                else:
+                    score = 0
+            print("\n You ran away!")
         else:
             # if player monster not defeated he gets to attack again
             attack_main(monster, player_monster)
@@ -174,5 +187,19 @@ print("\n    <3 <3 <3 Loading <3 <3 <3\n")
 print("        ~Little Monsters~\n\n")
 
 # Generate new encounter:
+print(" You walk into the field. Suddenly...")
 encounter()
+cont = input("\nContinue your adventure?(Yes or No) ")
+if cont == "Yes" or cont == "Y" or cont == "y" or cont == "yes":
+    continue_game = True
+    while continue_game:
+        encounter()
+        cont = input("\nContinue your adventure?(Yes or No) ")
+        if cont == "Yes" or cont == "Y" or cont == "y" or cont == "yes":
+            continue_game = True
+        else:
+            continue_game = False
+            print("\n You find your way home and call it a night.")
+else:
+    print("\n You find your way home and call it a night.")
 
